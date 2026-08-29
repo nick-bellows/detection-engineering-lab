@@ -25,3 +25,6 @@ ml/artifacts/
 # Evidence is admitted only through the sanitized evidence workflow.
 evidence/raw/
 
+
+# Editable-install metadata.
+*.egg-info/
