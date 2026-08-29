@@ -1,5 +1,7 @@
 # Detection Engineering Lab
 
+[![quality](https://github.com/nick-bellows/detection-engineering-lab/actions/workflows/quality.yml/badge.svg)](https://github.com/nick-bellows/detection-engineering-lab/actions/workflows/quality.yml)
+
 Five Sigma detections, mapped to MITRE ATT&CK, compiled with pySigma to **Elastic** and
 **CrowdStrike LogScale**, and proven on a **live Elasticsearch** against synthetic positive and
 negative-control fixtures — in CI, on every push. Plus the alert-enrichment step that turns a hit
