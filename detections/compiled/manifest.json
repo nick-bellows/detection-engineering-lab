@@ -1,0 +1,91 @@
+{
+  "generated_with": {
+    "pysigma": "1.5.0",
+    "pysigma-backend-crowdstrike": "3.0.0",
+    "pysigma-backend-elasticsearch": "2.1.1",
+    "pysigma-pipeline-sysmon": "2.0.0",
+    "pysigma-pipeline-windows": "2.0.0"
+  },
+  "rules": {
+    "DET-001": {
+      "outputs": {
+        "crowdstrike_logscale": [
+          "crowdstrike-logscale/DET-001.cql"
+        ],
+        "elastic": [
+          "elastic/DET-001.dsl.json",
+          "elastic/DET-001.lucene",
+          "elastic/DET-001.siem_rule.ndjson"
+        ]
+      },
+      "rule_path": "detections/rules/det-001-powershell-encoded-or-hidden-cradle.yml",
+      "rule_sha256": "c19daef300db89b71b15d08efe2d54a04d3f06ec9acb64cf412ccc4c68d2bf87",
+      "title": "PowerShell Launched With an Encoded Command or a Hidden Window Plus a Download Cradle",
+      "unsupported": {}
+    },
+    "DET-002": {
+      "outputs": {
+        "crowdstrike_logscale": [
+          "crowdstrike-logscale/DET-002.cql"
+        ],
+        "elastic": [
+          "elastic/DET-002.dsl.json",
+          "elastic/DET-002.lucene",
+          "elastic/DET-002.siem_rule.ndjson"
+        ]
+      },
+      "rule_path": "detections/rules/det-002-lsass-dump-comsvcs-or-procdump.yml",
+      "rule_sha256": "2532e86e1cd916f6e5dcc8ee728584b7349cc9822a943481822ae126fc3b7115",
+      "title": "LSASS Memory Dump via comsvcs MiniDump or ProcDump",
+      "unsupported": {}
+    },
+    "DET-003": {
+      "outputs": {
+        "crowdstrike_logscale": [
+          "crowdstrike-logscale/DET-003.cql"
+        ],
+        "elastic": [
+          "elastic/DET-003.dsl.json",
+          "elastic/DET-003.lucene",
+          "elastic/DET-003.siem_rule.ndjson"
+        ]
+      },
+      "rule_path": "detections/rules/det-003-schtasks-system-or-user-writable.yml",
+      "rule_sha256": "d15a6b48bf7ab85418561f11b3052dd9008d76aa68a5df745146ddc63ba6f6cc",
+      "title": "Scheduled Task Created to Run as SYSTEM or From a User-Writable Path or Script Host",
+      "unsupported": {}
+    },
+    "DET-004": {
+      "outputs": {
+        "crowdstrike_logscale": [],
+        "elastic": [
+          "elastic/DET-004.dsl.json",
+          "elastic/DET-004.lucene",
+          "elastic/DET-004.siem_rule.ndjson"
+        ]
+      },
+      "rule_path": "detections/rules/det-004-run-key-user-writable-or-script-host.yml",
+      "rule_sha256": "f3d82a60538a93096623bf826b64f8b90115b1c613756efcd5b4be591bdf69b0",
+      "title": "Run Key Persistence Pointing at a User-Writable Path or Script Host",
+      "unsupported": {
+        "crowdstrike_logscale": "NoLogsourceMapping: crowdstrike_falcon_pipeline has no event mapping for logsource category=registry_set/product=windows; field names passed through untranslated"
+      }
+    },
+    "DET-005": {
+      "outputs": {
+        "crowdstrike_logscale": [],
+        "elastic": [
+          "elastic/DET-005.dsl.json",
+          "elastic/DET-005.lucene",
+          "elastic/DET-005.siem_rule.ndjson"
+        ]
+      },
+      "rule_path": "detections/rules/det-005-rdp-logon-outside-jump-hosts.yml",
+      "rule_sha256": "07b5db35ee137a2e5f3fe36204262c6b8211667a67618ede3a4a5d7b6792c72f",
+      "title": "RDP Logon From a Source Outside the Documented Jump Hosts",
+      "unsupported": {
+        "crowdstrike_logscale": "NoLogsourceMapping: crowdstrike_falcon_pipeline has no event mapping for logsource product=windows/service=security; field names passed through untranslated"
+      }
+    }
+  }
+}

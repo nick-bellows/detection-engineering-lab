@@ -1,0 +1,53 @@
+title: PowerShell Launched With an Encoded Command or a Hidden Window Plus a Download Cradle
+id: da740f84-ebcc-4d01-9dd8-6ecba7601e1e
+status: experimental
+description: |
+  Detects powershell.exe or pwsh.exe process creation where the command line either carries an
+  encoded command (-enc / -EncodedCommand / -ec) or combines a hidden window with a download
+  cradle (Net.WebClient, DownloadString, Invoke-WebRequest, IEX). Both shapes are how Atomic Red
+  Team T1059.001 launches payloads and how commodity loaders stage second stages. Plain
+  interactive or scripted PowerShell without those flags is deliberately out of scope.
+  ATT&CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.
+author: Nick Bellows
+date: 2026-08-29
+modified: 2026-08-29
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1059.001/T1059.001.md
+tags:
+  - attack.execution
+  - attack.t1059.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_image:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  selection_encoded:
+    # PowerShell accepts any unambiguous prefix of -EncodedCommand; Atomic tests 15-17
+    # rotate through them. ' -enc' also covers -enco... and -encodedcommand.
+    CommandLine|contains:
+      - ' -e '
+      - ' -ec '
+      - ' -en '
+      - ' -enc'
+  selection_hidden:
+    CommandLine|contains:
+      - ' -w hidden'
+      - ' -window hidden'
+      - ' -windowstyle hidden'
+  selection_cradle:
+    CommandLine|contains:
+      - 'Net.WebClient'
+      - 'DownloadString('
+      - 'DownloadFile('
+      - 'Invoke-WebRequest'
+      - 'IEX '
+      - 'IEX('
+  condition: selection_image and (selection_encoded or (selection_hidden and selection_cradle))
+falsepositives:
+  - Management agents that intentionally run encoded commands (some RMM tools, Intune remediation scripts); allowlist by parent process and signer rather than by command text.
+  - Administrators pasting encoded one-liners from vendor documentation.
+level: high

@@ -1,0 +1,1 @@
+event_platform=/^Win$/i #event_simpleName=/^ProcessRollup2$/i or #event_simpleName=/^SyntheticProcessRollup2$/i (ImageFileName=/\\rundll32\.exe$/i CommandLine=/comsvcs/i CommandLine=/MiniDump/i) or (ImageFileName=/\\procdump\.exe$/i or ImageFileName=/\\procdump64\.exe$/i CommandLine=/ -ma /i or CommandLine=/ -mm /i CommandLine=/lsass/i)

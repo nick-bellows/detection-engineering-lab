@@ -1,0 +1,44 @@
+title: LSASS Memory Dump via comsvcs MiniDump or ProcDump
+id: eb4ff281-55a2-40b4-a7ab-bb46fa383031
+status: experimental
+description: |
+  Detects two documented ways of writing lsass.exe memory to disk without a custom tool: rundll32
+  invoking the MiniDump export of comsvcs.dll, and Sysinternals ProcDump targeting lsass with a
+  full (-ma) or mini (-mm) dump. These are Atomic Red Team T1003.001 tests 1, 2 and 9. Direct
+  system-call dumpers (Dumpert, NanoDump) do not create these command lines and need the
+  Sysmon process-access (EventID 10) variant recorded in future-work.
+  ATT&CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.
+author: Nick Bellows
+date: 2026-08-29
+modified: 2026-08-29
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.001/T1003.001.md
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_comsvcs_image:
+    Image|endswith: '\rundll32.exe'
+  selection_comsvcs_cmd:
+    CommandLine|contains|all:
+      - 'comsvcs'
+      - 'MiniDump'
+  selection_procdump_image:
+    Image|endswith:
+      - '\procdump.exe'
+      - '\procdump64.exe'
+  selection_procdump_flag:
+    CommandLine|contains:
+      - ' -ma '
+      - ' -mm '
+  selection_procdump_target:
+    CommandLine|contains: 'lsass'
+  condition: (selection_comsvcs_image and selection_comsvcs_cmd) or (selection_procdump_image and selection_procdump_flag and selection_procdump_target)
+falsepositives:
+  - ProcDump used by administrators to dump other processes is excluded by the lsass target; dumping lsass legitimately is rare enough to always warrant a ticket.
+  - Vendor crash-reporting tools that load comsvcs.dll do not pass MiniDump on the rundll32 command line.
+level: critical

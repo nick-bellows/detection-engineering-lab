@@ -1,0 +1,42 @@
+title: RDP Logon From a Source Outside the Documented Jump Hosts
+id: 9a3c8979-ba34-4e42-bc2e-b01dd15f1ba0
+status: experimental
+description: |
+  Detects a successful RemoteInteractive logon (Security 4624, LogonType 10) whose source address
+  is not one of the documented RDP jump hosts. In the lab the jump hosts are 10.10.20.5 and
+  10.10.20.6; the list is the tuning surface and must match the environment. Atomic Red Team
+  T1021.001 test 1 produces this event on the target when it opens mstsc from a workstation.
+  Restricted Admin and NLA pre-authentication produce additional LogonType 3 events that this
+  rule deliberately ignores. Local logons carry IpAddress "-" in the raw event; Winlogbeat drops
+  that value before it reaches source.ip, so no "-" filter is needed at the ECS layer and one
+  would break the ip-typed field.
+  ATT&CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.
+author: Nick Bellows
+date: 2026-08-29
+modified: 2026-08-29
+references:
+  - https://attack.mitre.org/techniques/T1021/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1021.001/T1021.001.md
+tags:
+  - attack.lateral-movement
+  - attack.t1021.001
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4624
+    LogonType: 10
+  filter_jump_hosts:
+    IpAddress:
+      - '10.10.20.5'
+      - '10.10.20.6'
+  filter_local:
+    IpAddress:
+      - '127.0.0.1'
+      - '::1'
+  condition: selection and not 1 of filter_*
+falsepositives:
+  - Help-desk staff connecting directly from workstations in environments without an enforced jump host; the fix is the policy, not the rule.
+  - VDI brokers and monitoring appliances that open RDP sessions; add them to the jump-host filter with a change record.
+level: medium

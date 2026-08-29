@@ -1,0 +1,16 @@
+[
+  {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "query_string": {
+              "analyze_wildcard": true,
+              "query": "winlog.channel:Microsoft\\-Windows\\-Sysmon\\/Operational AND (event.code:13 AND ((registry.path:(*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\* OR *\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\* OR *\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\Explorer\\\\Run\\\\*)) AND (winlog.event_data.Details:(*\\\\AppData\\\\* OR *\\\\Temp\\\\* OR *\\\\Users\\\\Public\\\\* OR *powershell* OR *pwsh* OR *cmd.exe\\ \\/c* OR *cmd\\ \\/c* OR *mshta* OR *wscript* OR *cscript* OR *rundll32* OR *regsvr32* OR *.vbs* OR *.js* OR *.bat* OR *.ps1* OR *.hta*))))"
+            }
+          }
+        ]
+      }
+    }
+  }
+]

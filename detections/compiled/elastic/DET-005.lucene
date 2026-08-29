@@ -1,0 +1,1 @@
+winlog.channel:Security AND ((event.code:4624 AND winlog.event_data.LogonType:10) AND (NOT ((source.ip:(10.10.20.5 OR 10.10.20.6)) OR (source.ip:(127.0.0.1 OR \:\:1)))))

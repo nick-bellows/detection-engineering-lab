@@ -1,0 +1,54 @@
+title: Scheduled Task Created to Run as SYSTEM or From a User-Writable Path or Script Host
+id: b4e14c3d-2cd3-405a-abb3-27b95f3b45cc
+status: experimental
+description: |
+  Detects schtasks.exe creating a task that either runs as SYSTEM or whose action points at a
+  user-writable location (AppData, Temp, Users\Public) or a script host / shell (powershell,
+  cmd /c, mshta, wscript, cscript, rundll32, regsvr32). This is the shape of Atomic Red Team
+  T1053.005 tests 1 and 2. Tasks created through the Task Scheduler COM API or PowerShell
+  cmdlets (tests 4, 6) do not spawn schtasks.exe and need Security 4698 telemetry instead.
+  ATT&CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.
+author: Nick Bellows
+date: 2026-08-29
+modified: 2026-08-29
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1053.005/T1053.005.md
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.t1053.005
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_image:
+    Image|endswith: '\schtasks.exe'
+  selection_create:
+    CommandLine|contains: '/create'
+  selection_system:
+    CommandLine|contains:
+      - '/ru system'
+      - '/ru "system"'
+      - '/ru nt authority\system'
+      - '/ru "nt authority\system"'
+  selection_action:
+    CommandLine|contains:
+      - '\AppData\'
+      - '\Temp\'
+      - '\Users\Public\'
+      - 'powershell'
+      - 'pwsh'
+      - 'cmd.exe /c'
+      - 'cmd /c'
+      - 'mshta'
+      - 'wscript'
+      - 'cscript'
+      - 'rundll32'
+      - 'regsvr32'
+  condition: selection_image and selection_create and (selection_system or selection_action)
+falsepositives:
+  - Software installers and update agents that register SYSTEM tasks; allowlist by parent process and task name rather than disabling the SYSTEM clause.
+  - Administrative deployment scripts that create tasks running PowerShell maintenance jobs.
+level: medium

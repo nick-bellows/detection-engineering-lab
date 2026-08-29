@@ -1,0 +1,16 @@
+[
+  {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "query_string": {
+              "analyze_wildcard": true,
+              "query": "winlog.channel:Microsoft\\-Windows\\-Sysmon\\/Operational AND (event.code:1 AND ((process.executable.caseless:(*\\\\powershell.exe OR *\\\\pwsh.exe)) AND ((process.command_line:(*\\ \\-e\\ * OR *\\ \\-ec\\ * OR *\\ \\-en\\ * OR *\\ \\-enc*)) OR ((process.command_line:(*\\ \\-w\\ hidden* OR *\\ \\-window\\ hidden* OR *\\ \\-windowstyle\\ hidden*)) AND (process.command_line:(*Net.WebClient* OR *DownloadString\\(* OR *DownloadFile\\(* OR *Invoke\\-WebRequest* OR *IEX\\ * OR *IEX\\(*))))))"
+            }
+          }
+        ]
+      }
+    }
+  }
+]

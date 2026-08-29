@@ -1,0 +1,54 @@
+title: Run Key Persistence Pointing at a User-Writable Path or Script Host
+id: 810ce522-484f-4cc8-80df-671daa0e6f98
+status: experimental
+description: |
+  Detects a registry value written under a Run, RunOnce or Policies\Explorer\Run key whose data
+  points at a user-writable location (AppData, Temp, Users\Public) or launches a script host or
+  shell. Atomic Red Team T1547.001 tests 1, 3, 9, 12 and 13 write such values. Values that point
+  at Program Files binaries are excluded because that is how legitimate software registers tray
+  agents; the trade-off is documented in the writeup. Startup-folder variants (tests 4-7) are file
+  writes, not registry sets, and are out of scope for this rule.
+  ATT&CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.
+author: Nick Bellows
+date: 2026-08-29
+modified: 2026-08-29
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1547.001/T1547.001.md
+tags:
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.t1547.001
+logsource:
+  category: registry_set
+  product: windows
+detection:
+  selection_key:
+    TargetObject|contains:
+      - '\Software\Microsoft\Windows\CurrentVersion\Run\'
+      - '\Software\Microsoft\Windows\CurrentVersion\RunOnce\'
+      - '\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run\'
+  selection_data:
+    Details|contains:
+      - '\AppData\'
+      - '\Temp\'
+      - '\Users\Public\'
+      - 'powershell'
+      - 'pwsh'
+      - 'cmd.exe /c'
+      - 'cmd /c'
+      - 'mshta'
+      - 'wscript'
+      - 'cscript'
+      - 'rundll32'
+      - 'regsvr32'
+      - '.vbs'
+      - '.js'
+      - '.bat'
+      - '.ps1'
+      - '.hta'
+  condition: selection_key and selection_data
+falsepositives:
+  - Per-user applications installed under AppData (some chat and update agents) register Run values there; allowlist by value name and signer after review.
+  - Enterprise logon scripts pushed through the Policies\Explorer\Run key.
+level: medium
