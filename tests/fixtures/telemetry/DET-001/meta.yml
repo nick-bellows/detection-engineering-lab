@@ -1,0 +1,27 @@
+detection_id: DET-001
+synthetic: true
+authored_on: 2026-08-29
+author: Nick Bellows
+positive_fixture_id: FIX-DET-001-POS
+negative_fixture_id: FIX-DET-001-NEG
+positive_events: 4
+negative_events: 3
+sensor_assumption: "Sysmon EventID 1 via the Elastic Windows/Sysmon integration (ECS process.* fields)"
+atomic_reference:
+  catalog: https://github.com/redcanaryco/atomic-red-team (MIT); command shapes only, no payloads executed
+  accessed_on: 2026-08-29
+  tests:
+    - guid: f3132740-55bc-48c4-bcc0-758a459cd027
+      index: 1
+      name: "Mimikatz (download cradle via powershell.exe IEX/DownloadString)"
+    - guid: a538de64-1c74-46ed-aa60-b995ed302598
+      index: 17
+      name: "PowerShell Command Execution (powershell.exe -e <encoded>)"
+    - guid: 86a43bad-12e3-4e85-b97c-4d5cf25b95c3
+      index: 15
+      name: "ATHPowerShellCommandLineParameter -EncodedCommand variations"
+provenance: hand-authored from the Atomic command shapes above; no third-party telemetry was copied
+notes:
+  - "Positive 1 and 3 encode a harmless Write-Host string; the base64 is real UTF-16LE encoding, not a payload."
+  - "Positive 4 (uppercase -ENC) hits only because the lab index lowercases command lines; on the stock Elastic mapping it is a known miss. tests/live/test_siem.py proves both."
+  - "Negative 2 contains ' -eq ' to show the ' -e ' selector needs the trailing space."

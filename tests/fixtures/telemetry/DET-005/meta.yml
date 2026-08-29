@@ -1,0 +1,20 @@
+detection_id: DET-005
+synthetic: true
+authored_on: 2026-08-29
+author: Nick Bellows
+positive_fixture_id: FIX-DET-005-POS
+negative_fixture_id: FIX-DET-005-NEG
+positive_events: 2
+negative_events: 3
+sensor_assumption: "Windows Security 4624 via the Elastic Windows integration; IpAddress '-' is dropped before source.ip, LogonType kept in winlog.event_data"
+atomic_reference:
+  catalog: https://github.com/redcanaryco/atomic-red-team (MIT); command shapes only, no payloads executed
+  accessed_on: 2026-08-29
+  tests:
+    - guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
+      index: 1
+      name: "RDP to DomainController (mstsc from a workstation; the 4624/10 lands on the target)"
+provenance: hand-authored from the Atomic command shapes above; no third-party telemetry was copied
+notes:
+  - "Jump hosts 10.10.20.5 and 10.10.20.6 are the lab's documented RDP path; the filter list is the tuning surface."
+  - "Negative 2 has no source.ip at all (console logon), which is how a '-' address reaches ECS."

@@ -1,0 +1,23 @@
+detection_id: DET-003
+synthetic: true
+authored_on: 2026-08-29
+author: Nick Bellows
+positive_fixture_id: FIX-DET-003-POS
+negative_fixture_id: FIX-DET-003-NEG
+positive_events: 3
+negative_events: 3
+sensor_assumption: "Sysmon EventID 1 via the Elastic Windows/Sysmon integration (ECS process.* fields)"
+atomic_reference:
+  catalog: https://github.com/redcanaryco/atomic-red-team (MIT); command shapes only, no payloads executed
+  accessed_on: 2026-08-29
+  tests:
+    - guid: fec27f65-db86-4c2d-b66c-61945aee87c2
+      index: 1
+      name: "Scheduled Task Startup Script (/ru system, cmd.exe action)"
+    - guid: 42f53695-ad4a-4546-abb6-7d837f644a71
+      index: 2
+      name: "Scheduled task Local (/Create /SC ONCE)"
+provenance: hand-authored from the Atomic command shapes above; no third-party telemetry was copied
+notes:
+  - "Positive 3 uses the Atomic test 2 capitalisation (/Create); it hits because the lab index lowercases command lines and is a known miss on the stock mapping."
+  - "Negative 1 is a SYSTEM-context installer registering a Program Files updater without /ru: the documented false-positive shape stays silent."

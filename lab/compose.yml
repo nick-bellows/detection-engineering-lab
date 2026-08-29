@@ -1,0 +1,61 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:?Set STACK_VERSION in .env}
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      # Basic auth over plain HTTP, bound to loopback only (see ports). Without this
+      # line the 8.x image auto-configures TLS with a self-signed certificate, which
+      # is right for a shared cluster and wrong for a disposable localhost lab.
+      - xpack.security.http.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:?Set ELASTIC_PASSWORD in .env}
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "127.0.0.1:${ES_PORT:-9200}:9200"
+    volumes:
+      # A named volume, not a host bind mount. On Docker Desktop for Windows a bind
+      # mount fails Lucene's segment refresh with AccessDeniedException and every
+      # shard goes UNASSIGNED after the first bulk index (found 2026-08-29).
+      # Reset the lab with `docker compose -f lab/compose.yml down -v`.
+      - detection-lab-es-data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail --user elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health || exit 1",
+        ]
+      interval: 20s
+      timeout: 10s
+      retries: 12
+    networks:
+      - detection-lab
+
+  kibana:
+    # Optional: `docker compose --profile ui up -d`. Not on the test path, and it needs
+    # the kibana_system password initialised first (lab/README.md, "Known scaffold gate").
+    profiles: ["ui"]
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION:?Set STACK_VERSION in .env}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD:?Set KIBANA_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${KIBANA_PORT:-5601}:5601"
+    networks:
+      - detection-lab
+
+networks:
+  detection-lab:
+    driver: bridge
+
+volumes:
+  detection-lab-es-data:
+

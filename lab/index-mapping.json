@@ -1,0 +1,84 @@
+{
+  "_comment": "Index body for the fixture index used by tests/live/test_siem.py. Field names follow ECS as shipped by the Elastic Windows/Sysmon integrations. Deliberate divergence: the string fields that Sigma `contains` targets (command lines, registry paths and data) are keyword fields with a lowercase normalizer so the compiled Lucene query keeps Sigma's case-insensitive semantics; the stock integration maps process.command_line as `wildcard` (case-sensitive). See docs/detections/DET-001.md, Blind spots.",
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "normalizer": {
+        "lowercase": {"type": "custom", "filter": ["lowercase"]}
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": false,
+    "dynamic_templates": [
+      {
+        "event_data_strings": {
+          "path_match": "winlog.event_data.*",
+          "match_mapping_type": "string",
+          "mapping": {"type": "keyword", "ignore_above": 8191, "normalizer": "lowercase"}
+        }
+      },
+      {
+        "labels": {
+          "path_match": "labels.*",
+          "mapping": {"type": "keyword"}
+        }
+      }
+    ],
+    "properties": {
+      "@timestamp": {"type": "date"},
+      "event": {
+        "properties": {
+          "code": {"type": "keyword"},
+          "provider": {"type": "keyword"},
+          "kind": {"type": "keyword"},
+          "category": {"type": "keyword"},
+          "type": {"type": "keyword"},
+          "action": {"type": "keyword"},
+          "outcome": {"type": "keyword"}
+        }
+      },
+      "winlog": {
+        "properties": {
+          "channel": {"type": "keyword"},
+          "event_id": {"type": "keyword"},
+          "provider_name": {"type": "keyword"},
+          "computer_name": {"type": "keyword"},
+          "logon": {"properties": {"type": {"type": "keyword"}, "id": {"type": "keyword"}}},
+          "event_data": {"type": "object", "dynamic": true}
+        }
+      },
+      "host": {"properties": {"name": {"type": "keyword"}, "hostname": {"type": "keyword"}}},
+      "user": {"properties": {"name": {"type": "keyword"}, "domain": {"type": "keyword"}, "id": {"type": "keyword"}}},
+      "process": {
+        "properties": {
+          "pid": {"type": "long"},
+          "entity_id": {"type": "keyword"},
+          "name": {"type": "keyword", "fields": {"caseless": {"type": "keyword", "normalizer": "lowercase"}}},
+          "executable": {"type": "keyword", "fields": {"caseless": {"type": "keyword", "normalizer": "lowercase"}}},
+          "command_line": {"type": "keyword", "ignore_above": 8191, "normalizer": "lowercase"},
+          "parent": {
+            "properties": {
+              "pid": {"type": "long"},
+              "name": {"type": "keyword", "fields": {"caseless": {"type": "keyword", "normalizer": "lowercase"}}},
+              "executable": {"type": "keyword", "fields": {"caseless": {"type": "keyword", "normalizer": "lowercase"}}},
+              "command_line": {"type": "keyword", "ignore_above": 8191, "normalizer": "lowercase"}
+            }
+          }
+        }
+      },
+      "registry": {
+        "properties": {
+          "hive": {"type": "keyword"},
+          "key": {"type": "keyword", "normalizer": "lowercase"},
+          "path": {"type": "keyword", "normalizer": "lowercase"},
+          "value": {"type": "keyword"},
+          "data": {"properties": {"strings": {"type": "keyword", "ignore_above": 8191, "normalizer": "lowercase"}, "type": {"type": "keyword"}}}
+        }
+      },
+      "source": {"properties": {"ip": {"type": "ip"}, "port": {"type": "long"}, "domain": {"type": "keyword"}}},
+      "labels": {"type": "object", "dynamic": true}
+    }
+  }
+}

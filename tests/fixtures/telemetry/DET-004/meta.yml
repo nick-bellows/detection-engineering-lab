@@ -1,0 +1,23 @@
+detection_id: DET-004
+synthetic: true
+authored_on: 2026-08-29
+author: Nick Bellows
+positive_fixture_id: FIX-DET-004-POS
+negative_fixture_id: FIX-DET-004-NEG
+positive_events: 3
+negative_events: 3
+sensor_assumption: "Sysmon EventID 13 via the Elastic Windows/Sysmon integration; TargetObject is kept in winlog.event_data and mirrored to registry.path, Details to registry.data.strings"
+atomic_reference:
+  catalog: https://github.com/redcanaryco/atomic-red-team (MIT); command shapes only, no payloads executed
+  accessed_on: 2026-08-29
+  tests:
+    - guid: e55be3fd-3521-4610-9d1a-e210e42dcf05
+      index: 1
+      name: "Reg Key Run (command_to_execute set to an AppData path for this fixture)"
+    - guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
+      index: 3
+      name: "PowerShell Registry RunOnce (powershell download cradle as value data)"
+provenance: hand-authored from the Atomic command shapes above; no third-party telemetry was copied
+notes:
+  - "Atomic test 1's default payload path is C:\\Path\\AtomicRedTeam.exe, which this rule would not flag; the fixture models the test with its input argument pointing at AppData, and the writeup says so."
+  - "Negative 2 places an AppData path under a non-Run key to show the key selector is required."
