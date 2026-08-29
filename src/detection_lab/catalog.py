@@ -1,24 +1,9 @@
 """Detection lifecycle catalog: schema, gates, and validation.
 
-The catalog (``detections/catalog.yml``) is the single source of truth for what
-each detection has and has not proven. Lifecycle order::
-
-    planned -> implemented -> fixture-validated -> validated -> retired
-
-``fixture-validated`` means: the Sigma rule compiles, and its translated query
-returned the positive fixture and stayed silent on the negative-control fixture
-on a live Elasticsearch. The fixtures are synthetic. It says nothing about
-telemetry generation on a real host -- that is what ``validated`` adds (an
-Atomic Red Team run in an isolated VM with retained evidence).
-
-Two gates are exposed:
-
-* ``strict``: every detection is at least ``fixture-validated`` and the ATT&CK
-  version is resolved. This is the release gate for the fixture-validated
-  portfolio state.
-* ``require_validated``: every detection is ``validated``. This gate is expected
-  to FAIL until the VM run happens; a test asserts that it does, so the boundary
-  is enforced rather than merely documented.
+``detections/catalog.yml`` is the source of truth for each detection's state.
+Lifecycle and gates are defined in ``docs/DESIGN.md``; the two gates here are
+``strict`` (>= fixture-validated) and ``require_validated`` (VM-validated, expected
+to fail until the isolated-VM run, which a test asserts).
 """
 
 from __future__ import annotations

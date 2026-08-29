@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="688" height="298" viewBox="0 0 688 298" font-family="-apple-system,Segoe UI,Roboto,sans-serif" role="img" aria-labelledby="t d">
+<title id="t">Detection status matrix</title>
+<desc id="d">Per-detection state for 5 rules: Elastic and CrowdStrike LogScale compile targets, positive and negative fixture counts, the live-Elasticsearch test result, and the pending VM-validated step. Generated from catalog.yml.</desc>
+<rect x="0" y="0" width="688" height="298" rx="10" fill="#fcfcfb" stroke="#e4e3df"/>
+<text x="18" y="36" font-size="15" font-weight="600" fill="#0b0b0b">Detection status <tspan font-weight="400" fill="#52514e">— generated from catalog.yml</tspan></text>
+<text x="57" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">Detection</text>
+<text x="142" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">ATT&amp;CK</text>
+<text x="227" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">Elastic</text>
+<text x="308" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">LogScale</text>
+<text x="379" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">Pos fx</text>
+<text x="437" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">Neg fx</text>
+<text x="512" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">Live SIEM</text>
+<text x="614" y="68" font-size="11" font-weight="600" text-anchor="middle" fill="#52514e">VM validated</text>
+<text x="57" y="97" font-size="11.5" font-weight="600" text-anchor="middle" fill="#0b0b0b">DET-001</text>
+<text x="142" y="97" font-size="11.5" font-weight="600" text-anchor="middle" fill="#52514e">T1059.001</text>
+<rect x="191" y="82" width="72" height="22" rx="5" fill="#e6f4e6"/>
+<text x="227" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="269" y="82" width="78" height="22" rx="5" fill="#e6f4e6"/>
+<text x="308" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="353" y="82" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="379" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">4</text>
+<rect x="411" y="82" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="437" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="469" y="82" width="86" height="22" rx="5" fill="#e6f4e6"/>
+<text x="512" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">pass</text>
+<rect x="561" y="82" width="106" height="22" rx="5" fill="#fdf1d6"/>
+<text x="614" y="97" font-size="11.5" font-weight="500" text-anchor="middle" fill="#8a6410">pending</text>
+<text x="57" y="127" font-size="11.5" font-weight="600" text-anchor="middle" fill="#0b0b0b">DET-002</text>
+<text x="142" y="127" font-size="11.5" font-weight="600" text-anchor="middle" fill="#52514e">T1003.001</text>
+<rect x="191" y="112" width="72" height="22" rx="5" fill="#e6f4e6"/>
+<text x="227" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="269" y="112" width="78" height="22" rx="5" fill="#e6f4e6"/>
+<text x="308" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="353" y="112" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="379" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="411" y="112" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="437" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="469" y="112" width="86" height="22" rx="5" fill="#e6f4e6"/>
+<text x="512" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">pass</text>
+<rect x="561" y="112" width="106" height="22" rx="5" fill="#fdf1d6"/>
+<text x="614" y="127" font-size="11.5" font-weight="500" text-anchor="middle" fill="#8a6410">pending</text>
+<text x="57" y="157" font-size="11.5" font-weight="600" text-anchor="middle" fill="#0b0b0b">DET-003</text>
+<text x="142" y="157" font-size="11.5" font-weight="600" text-anchor="middle" fill="#52514e">T1053.005</text>
+<rect x="191" y="142" width="72" height="22" rx="5" fill="#e6f4e6"/>
+<text x="227" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="269" y="142" width="78" height="22" rx="5" fill="#e6f4e6"/>
+<text x="308" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="353" y="142" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="379" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="411" y="142" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="437" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="469" y="142" width="86" height="22" rx="5" fill="#e6f4e6"/>
+<text x="512" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">pass</text>
+<rect x="561" y="142" width="106" height="22" rx="5" fill="#fdf1d6"/>
+<text x="614" y="157" font-size="11.5" font-weight="500" text-anchor="middle" fill="#8a6410">pending</text>
+<text x="57" y="187" font-size="11.5" font-weight="600" text-anchor="middle" fill="#0b0b0b">DET-004</text>
+<text x="142" y="187" font-size="11.5" font-weight="600" text-anchor="middle" fill="#52514e">T1547.001</text>
+<rect x="191" y="172" width="72" height="22" rx="5" fill="#e6f4e6"/>
+<text x="227" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="269" y="172" width="78" height="22" rx="5" fill="#fce8df"/>
+<text x="308" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#b5471f">gap</text>
+<rect x="353" y="172" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="379" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="411" y="172" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="437" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="469" y="172" width="86" height="22" rx="5" fill="#e6f4e6"/>
+<text x="512" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">pass</text>
+<rect x="561" y="172" width="106" height="22" rx="5" fill="#fdf1d6"/>
+<text x="614" y="187" font-size="11.5" font-weight="500" text-anchor="middle" fill="#8a6410">pending</text>
+<text x="57" y="217" font-size="11.5" font-weight="600" text-anchor="middle" fill="#0b0b0b">DET-005</text>
+<text x="142" y="217" font-size="11.5" font-weight="600" text-anchor="middle" fill="#52514e">T1021.001</text>
+<rect x="191" y="202" width="72" height="22" rx="5" fill="#e6f4e6"/>
+<text x="227" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">compiled</text>
+<rect x="269" y="202" width="78" height="22" rx="5" fill="#fce8df"/>
+<text x="308" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#b5471f">gap</text>
+<rect x="353" y="202" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="379" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">2</text>
+<rect x="411" y="202" width="52" height="22" rx="5" fill="#eef1f6"/>
+<text x="437" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#1c5cab">3</text>
+<rect x="469" y="202" width="86" height="22" rx="5" fill="#e6f4e6"/>
+<text x="512" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#0a7a0a">pass</text>
+<rect x="561" y="202" width="106" height="22" rx="5" fill="#fdf1d6"/>
+<text x="614" y="217" font-size="11.5" font-weight="500" text-anchor="middle" fill="#8a6410">pending</text>
+<text x="18" y="248" font-size="10.5" fill="#52514e">green = proven &#183; orange = recorded gap (Falcon pipeline) &#183; amber = pending the isolated-VM run.</text>
+<text x="18" y="263" font-size="10.5" fill="#52514e">Live SIEM = tests/live/test_siem.py on Elasticsearch 8.19.20. Pos/Neg fx = synthetic positive / negative-control fixtures.</text>
+</svg>

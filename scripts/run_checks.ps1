@@ -8,6 +8,7 @@ ruff format --check src tests scripts
 mypy src
 pytest --cov=detection_lab --cov-report=term-missing
 python scripts/compile_rules.py --check
+python scripts/render_status_svg.py --check
 python scripts/validate_catalog.py --strict
 python scripts/build_evidence_manifest.py --check
 
