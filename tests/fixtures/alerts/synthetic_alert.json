@@ -1,0 +1,11 @@
+{
+  "alert_id": "SYN-ALERT-001",
+  "detection_id": "DET-001",
+  "title": "Synthetic PowerShell behavior alert",
+  "severity": "medium",
+  "host": "LAB-WIN-01",
+  "user": "LAB\\synthetic-admin",
+  "attack_ids": ["T1059.001"],
+  "synthetic": true
+}
+

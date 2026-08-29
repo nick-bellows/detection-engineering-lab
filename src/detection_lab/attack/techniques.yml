@@ -1,0 +1,30 @@
+# MITRE ATT&CK technique context bundled for alert enrichment.
+# Source: MITRE ATT&CK Enterprise, STIX collection index
+#   https://github.com/mitre-attack/attack-stix-data (index.json)
+# Terms: MITRE ATT&CK is provided under the MITRE terms of use (attribution required):
+#   https://attack.mitre.org/resources/legal-and-branding/terms-of-use/
+# Version and access date are recorded once here and re-checked when the catalog's
+# attack_version changes. Names and tactics are transcribed, not copied descriptions.
+attack_version: "19.2"
+accessed_at_utc: "2026-08-29T03:21Z"
+techniques:
+  - id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+    tactics: [execution]
+    url: https://attack.mitre.org/techniques/T1059/001/
+  - id: T1003.001
+    name: "OS Credential Dumping: LSASS Memory"
+    tactics: [credential-access]
+    url: https://attack.mitre.org/techniques/T1003/001/
+  - id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+    tactics: [execution, persistence, privilege-escalation]
+    url: https://attack.mitre.org/techniques/T1053/005/
+  - id: T1547.001
+    name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"
+    tactics: [persistence, privilege-escalation]
+    url: https://attack.mitre.org/techniques/T1547/001/
+  - id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+    tactics: [lateral-movement]
+    url: https://attack.mitre.org/techniques/T1021/001/
