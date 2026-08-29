@@ -1,0 +1,10 @@
+field,type,description
+event_time_utc,datetime,UTC event timestamp
+user_id,string,Fictional stable identity identifier
+source_id,string,Fictional source host or network identifier
+destination_id,string,Fictional destination identifier
+result,enum,success or failure
+authentication_type,string,Synthetic authentication mechanism
+is_privileged,boolean,Synthetic privilege context
+synthetic,boolean,Must always be true for the portfolio fixture
+

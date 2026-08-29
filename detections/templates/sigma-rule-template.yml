@@ -1,0 +1,23 @@
+title: INPUT_REQUIRED
+id: INPUT_REQUIRED_UUID
+status: experimental
+description: INPUT_REQUIRED_BEHAVIOR_AND_SCOPE
+author: Nick Bellows
+date: YYYY-MM-DD
+modified: YYYY-MM-DD
+references:
+  - INPUT_REQUIRED_AUTHORITATIVE_REFERENCE
+tags:
+  - attack.INPUT_REQUIRED_TACTIC
+  - attack.INPUT_REQUIRED_TECHNIQUE
+logsource:
+  category: INPUT_REQUIRED
+  product: windows
+detection:
+  selection:
+    INPUT_REQUIRED_FIELD: INPUT_REQUIRED_VALUE
+  condition: selection
+falsepositives:
+  - INPUT_REQUIRED_OBSERVED_OR_RESEARCHED_BENIGN_CASE
+level: medium
+

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Detection triage input",
+  "type": "object",
+  "required": ["alert_id", "detection_id", "title", "severity", "host", "user"],
+  "properties": {
+    "alert_id": {"type": "string", "minLength": 1},
+    "detection_id": {"type": "string", "pattern": "^DET-[0-9]{3}$"},
+    "title": {"type": "string", "minLength": 1},
+    "severity": {"enum": ["low", "medium", "high", "critical"]},
+    "host": {"type": "string", "minLength": 1},
+    "user": {"type": "string", "minLength": 1},
+    "attack_ids": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
+

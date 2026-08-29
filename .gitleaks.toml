@@ -1,0 +1,14 @@
+# gitleaks configuration. Extends the upstream rule set; the allowlist covers
+# only the lab-only Elasticsearch/Kibana passwords in lab/.env.example, which
+# are committed on purpose so `docker compose up` works from a clean checkout
+# and are wrong for anything real. lab/.env itself is gitignored.
+
+title = "detection-engineering-lab"
+
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''lab/\.env\.example''',
+]

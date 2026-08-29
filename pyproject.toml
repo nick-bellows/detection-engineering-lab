@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "detection-engineering-lab"
+version = "0.1.0"
+description = "Detection engineering validation and alert enrichment portfolio"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "jsonschema>=4.23,<5",
+  "pydantic>=2.10,<3",
+  "pyyaml>=6,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.14,<2",
+  "pytest>=8,<10",
+  "pytest-cov>=6,<8",
+  "ruff>=0.12,<1",
+  "types-PyYAML>=6,<7",
+  "types-jsonschema>=4.23,<5",
+]
+# Rule compilation and the live-SIEM test. Pinned exactly: a backend upgrade can
+# change emitted query text, and detections/compiled/ is committed and drift-checked.
+detection = [
+  "pysigma==1.5.0",
+  "pysigma-backend-elasticsearch==2.1.1",
+  "pysigma-backend-crowdstrike==3.0.0",
+  "pysigma-pipeline-sysmon==2.0.0",
+  "pysigma-pipeline-windows==2.0.0",
+  "elasticsearch>=8.19,<9",
+]
+ml = [
+  "jupyter>=1.1,<2",
+  "pandas>=2.2,<4",
+  "scikit-learn>=1.6,<2",
+]
+
+[project.scripts]
+detection-lab = "detection_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+detection_lab = ["py.typed", "attack/*.yml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# `siem` tests need a live Elasticsearch and are excluded by default; run them with
+# `pytest -m siem` (a command-line -m overrides this one).
+addopts = "-m 'not siem'"
+markers = [
+  "siem: requires a live Elasticsearch reachable at DETECTION_LAB_ES_URL",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["detection_lab"]
+

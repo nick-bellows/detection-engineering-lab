@@ -1,0 +1,27 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+*.pyc
+*.log
+.env
+dist/
+build/
+htmlcov/
+.coverage
+
+# Lab state and telemetry can contain host/user data and are not source artifacts.
+lab/state/
+lab/.env
+telemetry/raw/
+telemetry/normalized/
+tests/fixtures/telemetry/**/raw/
+
+# Generated notebook state and model artifacts.
+ml/notebooks/.ipynb_checkpoints/
+ml/artifacts/
+
+# Evidence is admitted only through the sanitized evidence workflow.
+evidence/raw/
+
