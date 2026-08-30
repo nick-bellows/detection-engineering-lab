@@ -6,15 +6,6 @@ Five behaviour-based Sigma detections, mapped to MITRE ATT&CK, each compiled to 
 **CrowdStrike LogScale** and run against a **live Elasticsearch** in CI — with the boundary between
 "the query works" and "the telemetry was really generated" kept explicit and machine-enforced.
 
-<!-- REWRITE IN YOUR VOICE before attaching this repo to an application. One honest paragraph:
-     why you built it, and the one thing that surprised you. Draft below — replace it. -->
-> I built this to answer a question that trips up a lot of detection content: does the rule
-> actually *fire* on the thing it claims to catch, and stay quiet on the near-miss that looks
-> like it? Writing the Sigma was the easy part. The surprising part was how much of a detection's
-> real behaviour lives in the *index mapping*, not the rule — a case-insensitive `contains` in
-> Sigma silently becomes case-sensitive on a stock Elastic field, so a rule that passes review can
-> miss `POWERSHELL.EXE -ENC`. That is the kind of gap this lab is designed to make visible.
-
 ## Coverage
 
 ![Per-detection status, generated from catalog.yml](docs/assets/status-matrix.svg)
