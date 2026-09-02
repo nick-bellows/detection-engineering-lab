@@ -39,6 +39,16 @@ GitHub Pages enablement remains a manual account-level action. The static artifa
 
 Use GitHub Pages only. Vercel adds no value, and Replit would encourage a fake interactive SIEM surface. Do not expose Elasticsearch/Kibana, Falcon, a webhook sink, or any laboratory host to the internet.
 
+## Known dependency boundary
+
+The 2026-09-02 local `pip-audit` pass found `PYSEC-2026-2447` in pySigma's
+`diskcache==5.6.3` dependency; no fixed release was listed. The issue requires an attacker
+to write a cache directory that a victim later deserializes. This repository does not call
+DiskCache directly, persist a shared cache, or deploy the compiler as a service; CI runs in
+an ephemeral workspace. Keep the exact pySigma toolchain pinned for compiled-query
+reproducibility, monitor upstream for a fixed release, and do not use attacker-writable cache
+state. This is a bounded acceptance, not a claim that the dependency has no vulnerability.
+
 ## Next engineering milestone - isolated VM validation
 
 When Nick explicitly chooses the setup session, execute only the approved Atomic tests inside a disposable offline Windows VM, collect the expected Sysmon/Security events, sanitize and hash retained evidence, exercise each rule, record failures, and update the validation matrix mechanically. A partial or negative result is acceptable and must be published honestly.
