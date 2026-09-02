@@ -13,17 +13,20 @@ Last verified: 2026-09-02
 
 Do not change `fixture-validated` to `validated` because rules compile or fixture tests pass. The isolated-VM procedure in `telemetry/atomic-test-plan.md` is the next credibility gate.
 
-## Current milestone - static detection explorer
+## Completed repository milestone - static detection explorer
 
 Goal: make the current evidence useful to a recruiter without exposing a SIEM or overstating validation.
 
-### Work
+### Delivered
 
-1. Generate a GitHub Pages catalog from `detections/catalog.yml`, `detections/compiled/manifest.json`, rule metadata, and `evidence/evidence-manifest.csv`.
-2. Support filtering by ATT&CK technique, log source, target platform, severity, and exact lifecycle status.
-3. For each rule, show the source Sigma, compiled query variants, test fixture, documented blind spots, validation record, and code link.
-4. Make missing compiled targets and missing telemetry evidence visually explicit.
-5. Add a recruiter route that explains one rule end to end in under two minutes.
+1. `docs/index.html` is generated from `detections/catalog.yml`, the compiled manifest, Sigma rule metadata, the validation matrix, and documented blind spots.
+2. Recruiters can filter all five rules by ATT&CK technique, log source, target platform, severity, and exact lifecycle status.
+3. Each card links source Sigma, compiled variants, positive and negative fixtures, live-Elasticsearch test, evidence manifest, and full write-up.
+4. Unsupported LogScale targets and missing host-telemetry validation are visually explicit on every applicable card.
+5. The page opens with a two-minute DET-001 route and contains no raw sensitive telemetry or runnable payloads.
+6. `scripts/render_explorer.py --check` runs locally and in CI so the published artifact cannot drift from the evidence sources.
+
+GitHub Pages enablement remains a manual account-level action. The static artifact is repository-ready and makes no live-site claim until the public URL is enabled and checked logged out.
 
 ### Acceptance criteria
 

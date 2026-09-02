@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Five fixture-validated Sigma detections with compiled queries, synthetic controls, documented gaps, and explicit validation boundaries.">
+<title>Detection Engineering Lab — evidence explorer</title>
+<style>
+:root { color-scheme: light dark; --page:#0b1016; --surface:#131b24; --line:#293644; --ink:#eef4f8; --muted:#a7b6c2; --blue:#65b5ff; --green:#65d89a; --amber:#ffc861; --red:#ff8a78; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--blue); } :focus-visible { outline:3px solid var(--amber); outline-offset:3px; }
+.wrap { max-width:1120px; margin:auto; padding:0 20px; }
+header { padding:48px 0 30px; border-bottom:1px solid var(--line); }
+h1 { margin:4px 0 10px; font-size:clamp(30px,5vw,46px); } h2 { font-size:19px; line-height:1.3; } h3 { font-size:14px; margin:18px 0 5px; }
+.eyebrow,.meta,.boundary { color:var(--muted); } .lede { max-width:76ch; font-size:18px; }
+.route { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; margin:24px 0; }
+.route div,.detection { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px; }
+.route strong { display:block; color:var(--green); }
+.filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:10px; padding:24px 0 12px; }
+label { color:var(--muted); font-size:12px; } select { display:block; width:100%; margin-top:4px; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); }
+#count { color:var(--muted); margin:0 0 14px; } .cards { display:grid; gap:14px; padding-bottom:36px; }
+.card-head { display:flex; justify-content:space-between; gap:10px; } .id { font:600 13px ui-monospace,monospace; }
+.status,.severity { font-size:12px; border:1px solid var(--line); border-radius:999px; padding:3px 8px; margin-left:8px; }
+.proof,.pending { padding:9px 11px; margin:10px 0; border-left:3px solid var(--green); background:#0e1918; }
+.pending { border-color:var(--amber); background:#1b1710; } .gap { color:var(--red); font-weight:600; }
+summary { cursor:pointer; color:var(--blue); } footer { border-top:1px solid var(--line); padding:26px 0 44px; color:var(--muted); }
+.skip { position:absolute; left:-9999px; top:8px; background:var(--surface); padding:8px; } .skip:focus { left:8px; }
+@media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#catalog">Skip to catalog</a>
+<header><div class="wrap">
+  <div class="eyebrow">Portfolio reference implementation · synthetic fixtures · no production telemetry</div>
+  <h1>Detection Engineering Lab</h1>
+  <p class="lede">Five Sigma detections compiled to Elastic and, where supported, CrowdStrike LogScale. The explorer makes the test evidence and missing host-validation evidence equally visible.</p>
+  <div class="route" aria-label="Two-minute reviewer route">
+    <div><strong>1 · Read one rule</strong><a href="#DET-001">DET-001 PowerShell</a> explains the signal and its blind spot.</div>
+    <div><strong>2 · Inspect the proof</strong><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">The SIEM test</a> asserts exact synthetic positives and zero negative controls.</div>
+    <div><strong>3 · Check the boundary</strong><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/telemetry/atomic-test-plan.md">The isolated-VM plan</a> remains intentionally unexecuted.</div>
+  </div>
+</div></header>
+<main id="catalog" class="wrap">
+  <div class="filters" aria-label="Detection filters">
+    <label>Technique<select data-filter="technique"><option value="">All</option><option value="LSASS Memory">LSASS Memory</option><option value="PowerShell">PowerShell</option><option value="Registry Run Keys / Startup Folder">Registry Run Keys / Startup Folder</option><option value="Remote Desktop Protocol">Remote Desktop Protocol</option><option value="Scheduled Task">Scheduled Task</option></select></label>
+    <label>Log source<select data-filter="logsource"><option value="">All</option><option value="process_creation">process_creation</option><option value="registry_set">registry_set</option><option value="security">security</option></select></label>
+    <label>Platform<select data-filter="platform"><option value="">All</option><option value="windows">windows</option></select></label>
+    <label>Severity<select data-filter="severity"><option value="">All</option><option value="critical">critical</option><option value="high">high</option><option value="medium">medium</option></select></label>
+    <label>Lifecycle<select data-filter="status"><option value="">All</option><option value="fixture-validated">fixture-validated</option></select></label>
+  </div>
+  <p id="count" role="status">Showing 5 of 5 detections</p>
+  <div class="cards">
+<article id="DET-001" class="detection" data-technique="PowerShell"
+ data-logsource="process_creation" data-platform="windows"
+ data-severity="high" data-status="fixture-validated">
+  <div class="card-head">
+    <div><span class="id">DET-001</span><span class="status">fixture-validated</span></div>
+    <span class="severity">high severity</span>
+  </div>
+  <h2>PowerShell Launched With an Encoded Command or a Hidden Window Plus a Download Cradle</h2>
+  <p class="meta">T1059.001 · PowerShell · windows / process_creation</p>
+  <p>Detects powershell.exe or pwsh.exe process creation where the command line either carries an
+encoded command (-enc / -EncodedCommand / -ec) or combines a hidden window with a download
+cradle (Net.WebClient, DownloadString, Invoke-WebRequest, IEX). Both shapes are how Atomic Red
+Team T1059.001 launches payloads and how commodity loaders stage second stages. Plain
+interactive or scripted PowerShell without those flags is deliberately out of scope.
+ATT&amp;CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.</p>
+  <div class="proof"><strong>What is proven:</strong> the Elastic query returned 4 synthetic positive fixtures and none of this rule's 3 negative controls in the live-Elasticsearch CI test.</div>
+  <div class="pending"><strong>What is not proven:</strong> no retained Windows/Sysmon host telemetry exists; VM validation remains pending.</div>
+  <details>
+    <summary>Inspect implementation and limits</summary>
+    <h3>Source and compiled targets</h3>
+    <ul><li><strong>Sigma:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/rules/det-001-powershell-encoded-or-hidden-cradle.yml">source rule</a></li><li><strong>Elastic:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-001.dsl.json">json</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-001.lucene">lucene</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-001.siem_rule.ndjson">ndjson</a> (executed with synthetic fixtures)</li><li><strong>LogScale:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/crowdstrike-logscale/DET-001.cql">cql</a> (compiled; not executed)</li></ul>
+    <h3>Fixtures and validation</h3>
+    <ul>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-001/positive.ndjson">4 synthetic positives</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-001/negative.ndjson">3 negative controls</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">live-Elasticsearch test</a>; result: pass</li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/evidence/evidence-manifest.csv">hashed evidence manifest</a></li>
+    </ul>
+    <h3>Representative blind spot</h3>
+    <p>Case sensitivity is a deployment property, not a rule property. Sigma contains is</p>
+    <p><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/docs/detections/DET-001.md">Read the complete detection write-up</a></p>
+  </details>
+</article>
+<article id="DET-002" class="detection" data-technique="LSASS Memory"
+ data-logsource="process_creation" data-platform="windows"
+ data-severity="critical" data-status="fixture-validated">
+  <div class="card-head">
+    <div><span class="id">DET-002</span><span class="status">fixture-validated</span></div>
+    <span class="severity">critical severity</span>
+  </div>
+  <h2>LSASS Memory Dump via comsvcs MiniDump or ProcDump</h2>
+  <p class="meta">T1003.001 · LSASS Memory · windows / process_creation</p>
+  <p>Detects two documented ways of writing lsass.exe memory to disk without a custom tool: rundll32
+invoking the MiniDump export of comsvcs.dll, and Sysinternals ProcDump targeting lsass with a
+full (-ma) or mini (-mm) dump. These are Atomic Red Team T1003.001 tests 1, 2 and 9. Direct
+system-call dumpers (Dumpert, NanoDump) do not create these command lines and need the
+Sysmon process-access (EventID 10) variant recorded in future-work.
+ATT&amp;CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.</p>
+  <div class="proof"><strong>What is proven:</strong> the Elastic query returned 3 synthetic positive fixtures and none of this rule's 3 negative controls in the live-Elasticsearch CI test.</div>
+  <div class="pending"><strong>What is not proven:</strong> no retained Windows/Sysmon host telemetry exists; VM validation remains pending.</div>
+  <details>
+    <summary>Inspect implementation and limits</summary>
+    <h3>Source and compiled targets</h3>
+    <ul><li><strong>Sigma:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/rules/det-002-lsass-dump-comsvcs-or-procdump.yml">source rule</a></li><li><strong>Elastic:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-002.dsl.json">json</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-002.lucene">lucene</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-002.siem_rule.ndjson">ndjson</a> (executed with synthetic fixtures)</li><li><strong>LogScale:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/crowdstrike-logscale/DET-002.cql">cql</a> (compiled; not executed)</li></ul>
+    <h3>Fixtures and validation</h3>
+    <ul>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-002/positive.ndjson">3 synthetic positives</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-002/negative.ndjson">3 negative controls</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">live-Elasticsearch test</a>; result: pass</li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/evidence/evidence-manifest.csv">hashed evidence manifest</a></li>
+    </ul>
+    <h3>Representative blind spot</h3>
+    <p>Direct-syscall and API-unhooking dumpers (Atomic tests 3, 4, 14), Task Manager (test 5), and</p>
+    <p><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/docs/detections/DET-002.md">Read the complete detection write-up</a></p>
+  </details>
+</article>
+<article id="DET-003" class="detection" data-technique="Scheduled Task"
+ data-logsource="process_creation" data-platform="windows"
+ data-severity="medium" data-status="fixture-validated">
+  <div class="card-head">
+    <div><span class="id">DET-003</span><span class="status">fixture-validated</span></div>
+    <span class="severity">medium severity</span>
+  </div>
+  <h2>Scheduled Task Created to Run as SYSTEM or From a User-Writable Path or Script Host</h2>
+  <p class="meta">T1053.005 · Scheduled Task · windows / process_creation</p>
+  <p>Detects schtasks.exe creating a task that either runs as SYSTEM or whose action points at a
+user-writable location (AppData, Temp, Users\Public) or a script host / shell (powershell,
+cmd /c, mshta, wscript, cscript, rundll32, regsvr32). This is the shape of Atomic Red Team
+T1053.005 tests 1 and 2. Tasks created through the Task Scheduler COM API or PowerShell
+cmdlets (tests 4, 6) do not spawn schtasks.exe and need Security 4698 telemetry instead.
+ATT&amp;CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.</p>
+  <div class="proof"><strong>What is proven:</strong> the Elastic query returned 3 synthetic positive fixtures and none of this rule's 3 negative controls in the live-Elasticsearch CI test.</div>
+  <div class="pending"><strong>What is not proven:</strong> no retained Windows/Sysmon host telemetry exists; VM validation remains pending.</div>
+  <details>
+    <summary>Inspect implementation and limits</summary>
+    <h3>Source and compiled targets</h3>
+    <ul><li><strong>Sigma:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/rules/det-003-schtasks-system-or-user-writable.yml">source rule</a></li><li><strong>Elastic:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-003.dsl.json">json</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-003.lucene">lucene</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-003.siem_rule.ndjson">ndjson</a> (executed with synthetic fixtures)</li><li><strong>LogScale:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/crowdstrike-logscale/DET-003.cql">cql</a> (compiled; not executed)</li></ul>
+    <h3>Fixtures and validation</h3>
+    <ul>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-003/positive.ndjson">3 synthetic positives</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-003/negative.ndjson">3 negative controls</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">live-Elasticsearch test</a>; result: pass</li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/evidence/evidence-manifest.csv">hashed evidence manifest</a></li>
+    </ul>
+    <h3>Representative blind spot</h3>
+    <p>Capitalisation: positive 3 (/Create) hits on the lab mapping only; on the stock Elastic</p>
+    <p><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/docs/detections/DET-003.md">Read the complete detection write-up</a></p>
+  </details>
+</article>
+<article id="DET-004" class="detection" data-technique="Registry Run Keys / Startup Folder"
+ data-logsource="registry_set" data-platform="windows"
+ data-severity="medium" data-status="fixture-validated">
+  <div class="card-head">
+    <div><span class="id">DET-004</span><span class="status">fixture-validated</span></div>
+    <span class="severity">medium severity</span>
+  </div>
+  <h2>Run Key Persistence Pointing at a User-Writable Path or Script Host</h2>
+  <p class="meta">T1547.001 · Registry Run Keys / Startup Folder · windows / registry_set</p>
+  <p>Detects a registry value written under a Run, RunOnce or Policies\Explorer\Run key whose data
+points at a user-writable location (AppData, Temp, Users\Public) or launches a script host or
+shell. Atomic Red Team T1547.001 tests 1, 3, 9, 12 and 13 write such values. Values that point
+at Program Files binaries are excluded because that is how legitimate software registers tray
+agents; the trade-off is documented in the writeup. Startup-folder variants (tests 4-7) are file
+writes, not registry sets, and are out of scope for this rule.
+ATT&amp;CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.</p>
+  <div class="proof"><strong>What is proven:</strong> the Elastic query returned 3 synthetic positive fixtures and none of this rule's 3 negative controls in the live-Elasticsearch CI test.</div>
+  <div class="pending"><strong>What is not proven:</strong> no retained Windows/Sysmon host telemetry exists; VM validation remains pending.</div>
+  <details>
+    <summary>Inspect implementation and limits</summary>
+    <h3>Source and compiled targets</h3>
+    <ul><li><strong>Sigma:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/rules/det-004-run-key-user-writable-or-script-host.yml">source rule</a></li><li><strong>Elastic:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-004.dsl.json">json</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-004.lucene">lucene</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-004.siem_rule.ndjson">ndjson</a> (executed with synthetic fixtures)</li><li><strong>LogScale:</strong> <span class="gap">recorded gap</span> — NoLogsourceMapping: crowdstrike_falcon_pipeline has no event mapping for logsource category=registry_set/product=windows; field names passed through untranslated</li></ul>
+    <h3>Fixtures and validation</h3>
+    <ul>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-004/positive.ndjson">3 synthetic positives</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-004/negative.ndjson">3 negative controls</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">live-Elasticsearch test</a>; result: pass</li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/evidence/evidence-manifest.csv">hashed evidence manifest</a></li>
+    </ul>
+    <h3>Representative blind spot</h3>
+    <p>Startup-folder persistence (Atomic tests 4–7), Winlogon Userinit/Shell (14–15), and</p>
+    <p><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/docs/detections/DET-004.md">Read the complete detection write-up</a></p>
+  </details>
+</article>
+<article id="DET-005" class="detection" data-technique="Remote Desktop Protocol"
+ data-logsource="security" data-platform="windows"
+ data-severity="medium" data-status="fixture-validated">
+  <div class="card-head">
+    <div><span class="id">DET-005</span><span class="status">fixture-validated</span></div>
+    <span class="severity">medium severity</span>
+  </div>
+  <h2>RDP Logon From a Source Outside the Documented Jump Hosts</h2>
+  <p class="meta">T1021.001 · Remote Desktop Protocol · windows / security</p>
+  <p>Detects a successful RemoteInteractive logon (Security 4624, LogonType 10) whose source address
+is not one of the documented RDP jump hosts. In the lab the jump hosts are 10.10.20.5 and
+10.10.20.6; the list is the tuning surface and must match the environment. Atomic Red Team
+T1021.001 test 1 produces this event on the target when it opens mstsc from a workstation.
+Restricted Admin and NLA pre-authentication produce additional LogonType 3 events that this
+rule deliberately ignores. Local logons carry IpAddress &quot;-&quot; in the raw event; Winlogbeat drops
+that value before it reaches source.ip, so no &quot;-&quot; filter is needed at the ECS layer and one
+would break the ip-typed field.
+ATT&amp;CK Enterprise v19.2 and the Atomic test catalog were accessed 2026-08-29.</p>
+  <div class="proof"><strong>What is proven:</strong> the Elastic query returned 2 synthetic positive fixtures and none of this rule's 3 negative controls in the live-Elasticsearch CI test.</div>
+  <div class="pending"><strong>What is not proven:</strong> no retained Windows/Sysmon host telemetry exists; VM validation remains pending.</div>
+  <details>
+    <summary>Inspect implementation and limits</summary>
+    <h3>Source and compiled targets</h3>
+    <ul><li><strong>Sigma:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/rules/det-005-rdp-logon-outside-jump-hosts.yml">source rule</a></li><li><strong>Elastic:</strong> <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-005.dsl.json">json</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-005.lucene">lucene</a>, <a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/detections/compiled/elastic/DET-005.siem_rule.ndjson">ndjson</a> (executed with synthetic fixtures)</li><li><strong>LogScale:</strong> <span class="gap">recorded gap</span> — NoLogsourceMapping: crowdstrike_falcon_pipeline has no event mapping for logsource product=windows/service=security; field names passed through untranslated</li></ul>
+    <h3>Fixtures and validation</h3>
+    <ul>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-005/positive.ndjson">2 synthetic positives</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/fixtures/telemetry/DET-005/negative.ndjson">3 negative controls</a></li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/tests/live/test_siem.py">live-Elasticsearch test</a>; result: pass</li>
+      <li><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/evidence/evidence-manifest.csv">hashed evidence manifest</a></li>
+    </ul>
+    <h3>Representative blind spot</h3>
+    <p>Restricted Admin mode and some RDP wrappers produce different logon types; the rule only sees</p>
+    <p><a href="https://github.com/nick-bellows/detection-engineering-lab/blob/main/docs/detections/DET-005.md">Read the complete detection write-up</a></p>
+  </details>
+</article></div>
+  <noscript><p>Filtering requires JavaScript; all five detection cards remain visible.</p></noscript>
+</main>
+<footer><div class="wrap"><strong>Evidence boundary:</strong> fixture-validated means compiled queries were exercised on Elasticsearch with synthetic events. It does not mean the rules fired on telemetry generated by a real Windows host, and no production false-positive rate is claimed.</div></footer>
+<script>
+(() => {
+  const controls = [...document.querySelectorAll("[data-filter]")];
+  const cards = [...document.querySelectorAll(".detection")];
+  const count = document.getElementById("count");
+  function apply() {
+    let visible = 0;
+    for (const card of cards) {
+      const show = controls.every(control => !control.value || card.dataset[control.dataset.filter] === control.value);
+      card.hidden = !show;
+      if (show) visible += 1;
+    }
+    count.textContent = `Showing ${visible} of ${cards.length} detections`;
+  }
+  controls.forEach(control => control.addEventListener("change", apply));
+})();
+</script>
+</body>
+</html>

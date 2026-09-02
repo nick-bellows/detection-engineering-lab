@@ -99,6 +99,7 @@ jobs:
           cache: pip
       - run: pip install -e ".[dev]"
       - run: python scripts/render_status_svg.py --check
+      - run: python scripts/render_explorer.py --check
 
   siem:
     name: live SIEM (Elasticsearch 8.19.20)

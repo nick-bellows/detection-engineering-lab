@@ -6,6 +6,10 @@ Five behaviour-based Sigma detections, mapped to MITRE ATT&CK, each compiled to 
 **CrowdStrike LogScale** and run against a **live Elasticsearch** in CI — with the boundary between
 "the query works" and "the telemetry was really generated" kept explicit and machine-enforced.
 
+**[Open the static detection evidence explorer](docs/index.html)** for a two-minute reviewer path and filters by ATT&CK technique, log source, platform, severity, and exact lifecycle state. It is generated from the catalog, compiled manifest, rules, and validation matrix.
+
+**Technology demonstrated:** Python, Sigma/pySigma, Elastic Query DSL and Lucene, CrowdStrike LogScale CQL, Elasticsearch, Pydantic, JSON Schema, pytest, Docker Compose, GitHub Actions, MITRE ATT&CK mapping, and hash-backed evidence manifests.
+
 ## Coverage
 
 ![Per-detection status, generated from catalog.yml](docs/assets/status-matrix.svg)
