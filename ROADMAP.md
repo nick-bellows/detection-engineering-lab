@@ -1,6 +1,6 @@
 # Roadmap
 
-Last verified: 2026-09-02
+Last verified: 2026-09-04
 
 ## Handoff snapshot
 
@@ -8,7 +8,9 @@ Last verified: 2026-09-02
 | --- | --- |
 | Lifecycle | `GATED` - fixture-validated, not telemetry-validated |
 | Portfolio role | Supporting detection engineering, CI, security, and evidence-discipline project |
-| Current evidence | Five Sigma rules, compiled targets, synthetic fixtures, validation matrix, tests, and documentation |
+| Current evidence | Five Sigma rules, compiled targets, synthetic fixtures, validation matrix, tests, documentation, and a generated evidence explorer |
+| Published site | GitHub Pages (`main`, `/docs`), live at <https://nick-bellows.github.io/detection-engineering-lab/>; loaded logged out and link-checked 2026-09-04 |
+| CI | 8 jobs green on `main` (lint, mypy strict, unit, catalog gate with the VM gate asserted failing, compile drift, status/explorer drift, live SIEM, gitleaks) |
 | Validation boundary | No claim that the rules have fired on retained real Windows/Sysmon telemetry |
 
 Do not change `fixture-validated` to `validated` because rules compile or fixture tests pass. The isolated-VM procedure in `telemetry/atomic-test-plan.md` is the next credibility gate.
@@ -26,14 +28,14 @@ Goal: make the current evidence useful to a recruiter without exposing a SIEM or
 5. The page opens with a two-minute DET-001 route and contains no raw sensitive telemetry or runnable payloads.
 6. `scripts/render_explorer.py --check` runs locally and in CI so the published artifact cannot drift from the evidence sources.
 
-GitHub Pages enablement remains a manual account-level action. The static artifact is repository-ready and makes no live-site claim until the public URL is enabled and checked logged out.
+GitHub Pages is enabled (source `main`, path `/docs`) and the explorer is live at <https://nick-bellows.github.io/detection-engineering-lab/>. On 2026-09-04 it was loaded logged out (HTTP 200) and every card link resolves to a `blob/main` path in this repository. The page claims nothing beyond the repository evidence.
 
 ### Acceptance criteria
 
 - The site is generated from repository sources and fails CI on catalog/status drift.
 - Every rule remains labeled `fixture-validated` until a sanitized, hashed telemetry artifact and validation log prove otherwise.
 - No raw sensitive logs, real endpoint identifiers, credentials, or runnable offensive commands are published through the site.
-- Logged-out Pages, mobile layout, keyboard access, contrast, and links are checked.
+- Logged-out load and links: checked 2026-09-04. Mobile layout, keyboard access, and contrast are designed in (single-column grid, skip link, visible focus outline, light/dark colour scheme) but have not been checked by hand on a device.
 
 ## Hosting decision
 
@@ -52,6 +54,8 @@ state. This is a bounded acceptance, not a claim that the dependency has no vuln
 ## Next engineering milestone - isolated VM validation
 
 When Nick explicitly chooses the setup session, execute only the approved Atomic tests inside a disposable offline Windows VM, collect the expected Sysmon/Security events, sanitize and hash retained evidence, exercise each rule, record failures, and update the validation matrix mechanically. A partial or negative result is acceptable and must be published honestly.
+
+The per-detection test records (Atomic GUIDs, privileges, prerequisites, expected source events, cleanup, negative controls, and the promotion steps) are already written in `telemetry/atomic-test-plan.md`; only the fields a run produces are blank.
 
 All additional variants, LogScale work, ML ideas, and enrichment remain unscheduled in `docs/future-work.md`.
 

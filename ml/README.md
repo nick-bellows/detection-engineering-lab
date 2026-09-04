@@ -1,5 +1,9 @@
 # Authentication anomaly baseline
 
+> Status: **planned — no code exists in this directory.** Only the schema of the synthetic
+> input (`data/synthetic_auth_schema.csv`) is committed. Gated on all five catalog entries
+> reaching `validated`; listed in `docs/future-work.md`.
+
 This is a supplementary comparison to the validated rule pipeline, not the project's critical path.
 
 ## Proposed experiment

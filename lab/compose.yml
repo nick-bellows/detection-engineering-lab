@@ -37,7 +37,7 @@ services:
 
   kibana:
     # Optional: `docker compose --profile ui up -d`. Not on the test path, and it needs
-    # the kibana_system password initialised first (lab/README.md, "Known scaffold gate").
+    # the kibana_system password initialised first (lab/README.md, "Kibana (optional)").
     profiles: ["ui"]
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION:?Set STACK_VERSION in .env}
     depends_on:

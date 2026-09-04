@@ -6,7 +6,7 @@ Five behaviour-based Sigma detections, mapped to MITRE ATT&CK, each compiled to 
 **CrowdStrike LogScale** and run against a **live Elasticsearch** in CI — with the boundary between
 "the query works" and "the telemetry was really generated" kept explicit and machine-enforced.
 
-**[Open the static detection evidence explorer](docs/index.html)** for a two-minute reviewer path and filters by ATT&CK technique, log source, platform, severity, and exact lifecycle state. It is generated from the catalog, compiled manifest, rules, and validation matrix.
+**[Open the detection evidence explorer](https://nick-bellows.github.io/detection-engineering-lab/)** (GitHub Pages; source in `docs/index.html`) for a two-minute reviewer path and filters by ATT&CK technique, log source, platform, severity, and exact lifecycle state. It is generated from the catalog, compiled manifest, rules, and validation matrix, and CI fails if the published page drifts from them.
 
 **Technology demonstrated:** Python, Sigma/pySigma, Elastic Query DSL and Lucene, CrowdStrike LogScale CQL, Elasticsearch, Pydantic, JSON Schema, pytest, Docker Compose, GitHub Actions, MITRE ATT&CK mapping, and hash-backed evidence manifests.
 
@@ -93,6 +93,7 @@ python -m pip install -e ".[dev,detection]"
 pytest                                        # unit + contract tests (no SIEM needed)
 python scripts/compile_rules.py --check       # committed queries match the rules
 python scripts/render_status_svg.py --check   # the status image matches the catalog
+python scripts/render_explorer.py --check     # the published explorer matches its sources
 python scripts/validate_catalog.py --strict   # every rule >= fixture-validated
 detection-lab triage tests/fixtures/alerts/synthetic_alert.json --critical-host LAB-WIN-01
 ```
@@ -120,13 +121,16 @@ docs/DESIGN.md          How the lab is built and gated — lifecycle, compile ta
 docs/detections/        One write-up per detection
 docs/validation-log.md  The mutation that made each gate fail, and the defects found
 docs/future-work.md     Backlog, each item tagged with the job-description line it answers
+docs/index.html         Generated evidence explorer, published at https://nick-bellows.github.io/detection-engineering-lab/
+ROADMAP.md              Handoff snapshot, hosting decision, dependency boundary, next milestone
 tests/fixtures/         Synthetic telemetry (+ meta.yml) and a sample alert
 tests/live/             Live-SIEM tests (marker `siem`)
 lab/                    Compose lab, pinned image digests, fixture index mapping
-telemetry/              Validation matrix and the isolated-VM plan (atomic-test-plan.md)
+telemetry/              Validation matrix and the isolated-VM plan (atomic-test-plan.md: per-detection records filled, not run)
 evidence/               Hashed manifest of every artefact the catalog points at
-src/detection_lab/      Catalog gates, rule compiler, fixtures loader, enrichment, CLI
-scripts/                compile_rules · validate_catalog · build_evidence_manifest · render_status_svg · wait_for_es
+ml/                     Planned anomaly baseline — no code yet; gated on `validated` (ml/README.md)
+src/detection_lab/      Catalog gates, rule compiler, fixtures loader, enrichment, explorer, CLI
+scripts/                compile_rules · validate_catalog · build_evidence_manifest · render_status_svg · render_explorer · wait_for_es
 ```
 
 ## Safety and licences
